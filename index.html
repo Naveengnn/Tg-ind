@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Telegram File Index</title>
+  <style>
+    body { font-family: sans-serif; max-width: 800px; margin: auto; }
+    .file { border-bottom: 1px solid #ddd; padding: 10px; }
+  </style>
+</head>
+<body>
+  <h1>Telegram Channel Index</h1>
+  <input type="text" id="search" placeholder="Search files..." onkeyup="searchFiles()">
+  <div id="file-list"></div>
+
+  <script>
+    let files = [];
+    fetch('index.json').then(r => r.json()).then(data => {
+      files = data;
+      showFiles(files);
+    });
+
+    function showFiles(arr) {
+      document.getElementById('file-list').innerHTML = arr.map(f => `
+        <div class="file">
+          <b>${f.name}</b><br>
+          <a href="${f.link}" target="_blank">Download</a>
+        </div>`).join('');
+    }
+
+    function searchFiles() {
+      const q = document.getElementById('search').value.toLowerCase();
+      showFiles(files.filter(f => f.name.toLowerCase().includes(q)));
+    }
+  </script>
+</body>
+</html>
